@@ -1,0 +1,84 @@
+package com.vagarws.rest.swagger;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.vagarws.rest.to.request.CandidaturaRequest;
+import com.vagarws.rest.to.request.EtapaCandidaturaRequest;
+import com.vagarws.util.ConstantsUtil;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+
+
+@Tag(description = "API para consulta de candidaturas", name = "Candidaturas")
+@RequestMapping("/candidaturas")
+public interface ICandidaturaSwagger {
+
+	@Operation(summary = "Registrar candidaturas", description = "Este endpoint é destinado para cadastro de candidaturas.", security = @SecurityRequirement(name = ConstantsUtil.SECURITY_SWAGGER))
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = ConstantsUtil.CREATED, description = "Recurso criado com sucesso."),
+			@ApiResponse(responseCode = ConstantsUtil.NOT_FOUND, description = "Recurso não foi encontrado."),
+			@ApiResponse(responseCode = ConstantsUtil.CONFLICT, description = "Já possui uma candidatura cadastrado com os mesmos dados."),
+			@ApiResponse(responseCode = ConstantsUtil.UNAUTHORIZED, description = "O cliente não possui permissão para acesso ao recurso.") })
+	@PostMapping
+	public ResponseEntity<?> create(@Valid @RequestBody CandidaturaRequest candidaturaRequest);
+
+	@Operation(summary = "Buscar Candidatura", description = "Este endpoint é destinado para recuperar dados de uma candidatura pelo ID.", security = @SecurityRequirement(name = ConstantsUtil.SECURITY_SWAGGER))
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = ConstantsUtil.OK, description = "Retorna o recurso solicitado."),
+			@ApiResponse(responseCode = ConstantsUtil.NOT_FOUND, description = "Recurso não foi encontrado."),
+			@ApiResponse(responseCode = ConstantsUtil.BAD_REQUEST, description = "O corpo da solicitação está mal formado ou contém dados inválidos."),
+			@ApiResponse(responseCode = ConstantsUtil.UNAUTHORIZED, description = "O cliente não possui permissão para acesso ao recurso.") })
+	@GetMapping(value = "/{id}")
+	public ResponseEntity<?> findById(@NotBlank(message = "O campo não pode estar vazio.") @PathVariable String id);
+
+	@Operation(summary = "Busca uma lista de candidaturas", description = "Este endpoint é destinado para recuperar uma lista de candidaturas.", security = @SecurityRequirement(name = ConstantsUtil.SECURITY_SWAGGER))
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = ConstantsUtil.OK, description = "Retorna o recurso solicitado."),
+			@ApiResponse(responseCode = ConstantsUtil.UNAUTHORIZED, description = "O cliente não possui permissão para acesso ao recurso.") })
+	@GetMapping
+	public ResponseEntity<?> getAll();
+
+	@Operation(summary = "Atualiza os dados de uma candidatura", description = "Este endpoint é destinado para atualizar os dados da candidatura.", security = @SecurityRequirement(name = ConstantsUtil.SECURITY_SWAGGER))
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = ConstantsUtil.OK, description = "Retorna o recurso solicitado."),
+			@ApiResponse(responseCode = ConstantsUtil.NOT_FOUND, description = "Recurso não foi encontrado."),
+			@ApiResponse(responseCode = ConstantsUtil.BAD_REQUEST, description = "O corpo da solicitação está mal formado ou contém dados inválidos."),
+			@ApiResponse(responseCode = ConstantsUtil.UNAUTHORIZED, description = "O cliente não possui permissão para acesso ao recurso.") })
+	@PutMapping
+	public ResponseEntity<?> update(@RequestBody EtapaCandidaturaRequest etapaCandidaturaRequest);
+
+	@Operation(summary = "Deleta dados de uma candidatura", description = "Este endpoint é destinado para deletar dados de uma candidatura.", security = @SecurityRequirement(name = ConstantsUtil.SECURITY_SWAGGER))
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = ConstantsUtil.OK, description = "Retorna o recurso solicitado."),
+			@ApiResponse(responseCode = ConstantsUtil.NOT_FOUND, description = "Recurso não foi encontrado."),
+			@ApiResponse(responseCode = ConstantsUtil.BAD_REQUEST, description = "O corpo da solicitação está mal formado ou contém dados inválidos."),
+			@ApiResponse(responseCode = ConstantsUtil.UNAUTHORIZED, description = "O cliente não possui permissão para acesso ao recurso.") })
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> cancelar(@PathVariable String id);
+
+	@PostMapping("/{idVaga}/{idUsuario}")
+	public ResponseEntity<?> candidatar(@PathVariable("idVaga") String idVaga,
+			@PathVariable("idUsuario") String idUsuario);
+
+	@GetMapping(value = "/buscar/candidato/{id}")
+	public ResponseEntity<?> findByIdCanidaturaUsuarioCandidato(
+			@NotBlank(message = "O campo não pode estar vazio.") @PathVariable("id") String id);
+
+	@GetMapping(value = "/buscar/responsavel/{id}")
+	public ResponseEntity<?> findByIdCanidaturaUsuarioResponsavel(
+			@NotBlank(message = "O campo não pode estar vazio.") @PathVariable("id") String id);
+
+}

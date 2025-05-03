@@ -1,0 +1,103 @@
+<div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+  <div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="flex justify-center">
+      <div class="w-20 h-20 rounded-full bg-blue-500 flex items-center justify-center">
+        <mat-icon class="text-white text-4xl">work</mat-icon>
+      </div>
+    </div>
+
+    <h1 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+      Bem-vindo(a) de volta
+    </h1>
+    <p class="mt-2 text-center text-sm text-gray-600">
+      Acesse sua conta para gerenciar suas vagas
+    </p>
+  </div>
+
+  <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+      <div *ngIf="erroLogin" class="mb-4 p-4 rounded-md bg-red-50 border border-red-200">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <mat-icon class="text-red-500">error_outline</mat-icon>
+          </div>
+          <div class="ml-3">
+            <h3 class="text-sm font-medium text-red-800">Erro de autenticação</h3>
+            <div class="mt-2 text-sm text-red-700">
+              <p>{{mensagemErro}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700">
+            Email
+          </label>
+          <div class="mt-1">
+            <input id="email" name="email" type="email" autocomplete="email" formControlName="email"
+              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              placeholder="seu.email@exemplo.com">
+          </div>
+          <div *ngIf="hasError('email', 'required')" class="mt-1 text-xs text-red-600">
+            Email é obrigatório
+          </div>
+          <div *ngIf="hasError('email', 'email')" class="mt-1 text-xs text-red-600">
+            Email inválido
+          </div>
+        </div>
+
+        <div>
+          <label for="senha" class="block text-sm font-medium text-gray-700">
+            Senha
+          </label>
+          <div class="mt-1 relative">
+            <input id="senha" name="senha" [type]="mostrarSenha ? 'text' : 'password'" autocomplete="current-password"
+              formControlName="senha"
+              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              placeholder="••••••••">
+            <button type="button" tabindex="-1" (click)="toggleMostrarSenha()"
+              class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500 focus:outline-none">
+              <mat-icon class="text-base">{{mostrarSenha ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+          </div>
+          <div *ngIf="hasError('senha', 'required')" class="mt-1 text-xs text-red-600">
+            Senha é obrigatória
+          </div>
+        </div>
+
+        <div>
+          <button type="submit" [disabled]="carregando"
+            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed">
+            <span *ngIf="!carregando">Entrar</span>
+            <div *ngIf="carregando"
+              class="w-5 h-5 rounded-full border-2 border-white border-r-transparent animate-spin"></div>
+          </button>
+        </div>
+      </form>
+
+      <div class="mt-6">
+          <div class="relative">
+            <div class="absolute inset-0 flex items-center">
+              <div class="w-full border-t border-gray-300"></div>
+            </div>
+            <div class="relative flex justify-center text-sm">
+              <span class="px-2 bg-white text-gray-500">
+                Ou
+              </span>
+            </div>
+          </div>
+        </div>
+
+      <div class="mt-6 text-center">
+          <p class="text-sm text-gray-600">
+            Ainda não tem uma conta?
+            <a (click)="irParaCadastro()" class="font-medium text-blue-600 hover:text-blue-500 cursor-pointer">
+              Cadastre-se
+            </a>
+          </p>
+        </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+.mat-mdc-snack-bar-container,
+.mat-mdc-snackbar-surface {
+  &.notification-snackbar {
+    --mdc-snackbar-container-color: none !important;
+    --mat-mdc-snack-bar-button-color: none !important;
+    --mdc-snackbar-supporting-text-color: none !important;
+    box-shadow: none !important;
+  }
+}
+
+.mat-mdc-snackbar-surface {
+  box-shadow: none !important;
+}

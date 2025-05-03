@@ -1,0 +1,9 @@
+{
+    "id": "a5d32fec-1f06-4388-8a70-84545144268c",
+    "email": "TesteUpdate@teste.com",
+    "senha": "123",
+    "dataNascimento": "1990-12-17",
+    "nome": "Teste_Update",
+    "cpf": "02632201156",
+    "ativo": true
+}

@@ -1,0 +1,17 @@
+{
+    "id": "18993f4f-e2b3-44f5-b7d0-2d46a609963c344",
+    "ativo": true,
+    "nome": "user",
+    "dataNascimento": "2024-12-17",
+    "cpf": "47613306003",
+    "listaPerfil": [
+        {
+            "id": "926dd884-eb21-4f18-9a79-a4cf1f87c06e",
+            "perfil": "ROLE_USER"
+        }
+    ],
+    "credenciais": {
+        "email": "user@user.com",
+        "senha": "$2a$10$COX.yCeU9ZLLeKFPdnoKku2wF5e6bIMWxbvv06yvPpxXJEi5IQVwa"
+    }
+}

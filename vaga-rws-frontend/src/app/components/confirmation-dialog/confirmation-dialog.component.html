@@ -1,0 +1,31 @@
+<div class="p-6 flex flex-col items-center max-w-md mx-auto text-center">
+  <div [ngClass]="{ 
+      'bg-orange-50 text-orange-500': data.type === 'warning',
+      'bg-red-50 text-red-500': data.type === 'danger',
+      'bg-blue-50 text-blue-500': data.type === 'info',
+      'bg-green-50 text-green-500': data.type === 'success'
+    }" class="w-16 h-16 rounded-full flex items-center justify-center mb-6">
+    <mat-icon class="text-5xl">{{data.icon}}</mat-icon>
+  </div>
+
+  <div class="w-full">
+    <h2 class="text-xl font-semibold text-gray-800 mb-3">{{data.title}}</h2>
+    <p class="text-sm text-gray-600 mb-6">{{data.message}}</p>
+  </div>
+
+  <div class="flex gap-3 mt-2 w-full justify-center sm:justify-end">
+    <button type="button"
+      class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+      (click)="cancel()">
+      {{data.cancelText}}
+    </button>
+    <button type="button" [ngClass]="{ 
+          'bg-orange-500 hover:bg-orange-600': data.type === 'warning',
+          'bg-red-500 hover:bg-red-600': data.type === 'danger',
+          'bg-blue-500 hover:bg-blue-600': data.type === 'info',
+          'bg-green-500 hover:bg-green-600': data.type === 'success'
+        }" class="px-4 py-2 text-sm font-medium text-white rounded-md transition-colors" (click)="confirm()">
+      {{data.confirmText}}
+    </button>
+  </div>
+</div>

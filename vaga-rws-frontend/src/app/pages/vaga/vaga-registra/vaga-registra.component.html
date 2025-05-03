@@ -1,0 +1,264 @@
+<div class="max-h-screen">
+  <h2 class="text-xl font-semibold text-gray-800 mb-6 px-6 pt-6">
+    {{ modoEdicao ? 'Editar Vaga' : 'Nova Vaga' }}
+  </h2>
+
+  <form [formGroup]="vagaForm" (ngSubmit)="onSubmit()" class="flex flex-col h-full">
+    <div class="flex-grow px-6">
+      <div class="space-y-5 pb-6">
+        <div class="w-full">
+          <label for="titulo" class="block text-sm font-medium text-gray-700 mb-1">
+            Título da vaga<span class="text-red-500 ml-0.5">*</span>
+          </label>
+          <input id="titulo" type="text" formControlName="titulo"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm"
+            placeholder="Ex: Desenvolvedor Frontend Angular">
+          <div *ngIf="hasError('titulo', 'required')" class="mt-1 text-xs text-red-500">
+            Título é obrigatório
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div>
+            <label for="empresa" class="block text-sm font-medium text-gray-700 mb-1">
+              Empresa<span class="text-red-500 ml-0.5">*</span>
+            </label>
+            <input id="empresa" type="text" formControlName="empresa"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm"
+              placeholder="Nome da empresa">
+            <div *ngIf="hasError('empresa', 'required')" class="mt-1 text-xs text-red-500">
+              Empresa é obrigatória
+            </div>
+          </div>
+
+          <div>
+            <label for="localidade" class="block text-sm font-medium text-gray-700 mb-1">
+              Localidade<span class="text-red-500 ml-0.5">*</span>
+            </label>
+            <input id="localidade" type="text" formControlName="localidade"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm"
+              placeholder="Ex: São Paulo, SP">
+            <div *ngIf="hasError('localidade', 'required')" class="mt-1 text-xs text-red-500">
+              Localidade é obrigatória
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div>
+            <label for="regime" class="block text-sm font-medium text-gray-700 mb-1">
+              Regime<span class="text-red-500 ml-0.5">*</span>
+            </label>
+            <select id="regime" formControlName="regime"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm appearance-none bg-white bg-select-arrow bg-no-repeat bg-right-05">
+              <option *ngFor="let regime of regimeOptions" [value]="regime">{{regime}}</option>
+            </select>
+            <div *ngIf="hasError('regime', 'required')" class="mt-1 text-xs text-red-500">
+              Regime é obrigatório
+            </div>
+          </div>
+
+          <div>
+            <label for="modalidade" class="block text-sm font-medium text-gray-700 mb-1">
+              Modalidade<span class="text-red-500 ml-0.5">*</span>
+            </label>
+            <select id="modalidade" formControlName="modalidade"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm appearance-none bg-white bg-select-arrow bg-no-repeat bg-right-05">
+              <option *ngFor="let modalidade of modalidadeOptions" [value]="modalidade">{{modalidade}}</option>
+            </select>
+            <div *ngIf="hasError('modalidade', 'required')" class="mt-1 text-xs text-red-500">
+              Modalidade é obrigatória
+            </div>
+          </div>
+        </div>
+
+
+        <div class="w-full">
+          <label for="usuarioResponsavel" class="block text-sm font-medium text-gray-700 mb-1">
+            Responsavel pela Vaga<span class="text-red-500 ml-0.5">*</span>
+          </label>
+          <select id="usuarioResponsavel" formControlName="usuarioResponsavel" [compareWith]="compararUsuarios"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm appearance-none bg-white bg-select-arrow bg-no-repeat bg-right-05">
+            <option *ngFor="let usuarioResponsavel of listaUsuarioResponsavel" [ngValue]="usuarioResponsavel">
+              {{usuarioResponsavel.nome}}</option>
+          </select>
+          <div *ngIf="hasError('usuarioResponsavel', 'required')" class="mt-1 text-xs text-red-500">
+            Responsavel pela Vaga é obrigatório
+          </div>
+        </div>
+
+        <div class="w-full">
+          <div>
+            <label for="emailContato" class="block text-sm font-medium text-gray-700 mb-1">
+              Email<span class="text-red-500 ml-0.5">*</span>
+            </label>
+            <input id="emailContato" type="emailContato" formControlName="emailContato"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm"
+              placeholder="Ex: joao.silva@empresa.com">
+            <div *ngIf="hasError('emailContato', 'required')" class="mt-1 text-xs text-red-500">
+              Email é obrigatório
+            </div>
+            <div *ngIf="hasError('emailContato', 'emailContato')" class="mt-1 text-xs text-red-500">
+              Email inválido
+            </div>
+          </div>
+        </div>
+
+        <div class="w-full">
+          <label for="faixaSalarial" class="block text-sm font-medium text-gray-700 mb-1">
+            Faixa salarial
+          </label>
+          <input id="faixaSalarial" type="text" formControlName="faixaSalarial"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm"
+            placeholder="Ex: R$ 8.000 - R$ 10.000 ou A combinar">
+        </div>
+
+        <div class="w-full">
+          <label for="descricao" class="block text-sm font-medium text-gray-700 mb-1">
+            Descrição da vaga<span class="text-red-500 ml-0.5">*</span>
+          </label>
+          <textarea id="descricao" formControlName="descricao"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm min-h-[120px] resize-y"
+            rows="4" placeholder="Descreva as responsabilidades e atividades da posição"></textarea>
+          <div *ngIf="hasError('descricao', 'required')" class="mt-1 text-xs text-red-500">
+            Descrição é obrigatória
+          </div>
+          <div *ngIf="hasError('descricao', 'minlength')" class="mt-1 text-xs text-red-500">
+            Descrição deve ter pelo menos 20 caracteres
+          </div>
+        </div>
+
+        <div class="w-full">
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            Requisitos<span class="text-red-500 ml-0.5">*</span>
+          </label>
+          <div
+            class="min-h-[45px] p-2 border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 bg-white transition-colors">
+            <div class="flex flex-wrap gap-2 mb-2">
+              <div *ngFor="let requisito of requisitos"
+                class="flex items-center bg-blue-50 text-blue-700 text-xs font-medium px-3 py-1 rounded-full">
+                {{requisito}}
+                <button type="button" (click)="removerRequisito(requisito)"
+                  class="ml-1 text-blue-700 hover:text-red-500 focus:outline-none">
+                  ✕
+                </button>
+              </div>
+            </div>
+            <div>
+              <input #requisitoInput placeholder="Adicionar requisito e pressionar Enter"
+                class="w-full border-none p-1 text-sm focus:outline-none"
+                (keydown.enter)="adicionarRequisitoManual(requisitoInput.value); requisitoInput.value = ''; $event.preventDefault()">
+            </div>
+          </div>
+          <div class="mt-1 text-xs text-gray-500">
+            Digite um requisito e pressione Enter para adicionar
+          </div>
+          <div *ngIf="requisitos.length === 0 && vagaForm.touched" class="mt-1 text-xs text-red-500">
+            Adicione pelo menos um requisito
+          </div>
+        </div>
+
+        <div class="w-full">
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            Beneficios<span class="text-red-500 ml-0.5">*</span>
+          </label>
+          <div
+            class="min-h-[45px] p-2 border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 bg-white transition-colors">
+            <div class="flex flex-wrap gap-2 mb-2">
+              <div *ngFor="let beneficio of beneficios"
+                class="flex items-center bg-blue-50 text-blue-700 text-xs font-medium px-3 py-1 rounded-full">
+                {{beneficio}}
+                <button type="button" (click)="removerBeneficio(beneficio)"
+                  class="ml-1 text-blue-700 hover:text-red-500 focus:outline-none">
+                  ✕
+                </button>
+              </div>
+            </div>
+            <div>
+              <input #beneficioInput placeholder="Adicionar requisito e pressionar Enter"
+                class="w-full border-none p-1 text-sm focus:outline-none"
+                (keydown.enter)="adicionarBeneficioManual(beneficioInput.value); beneficioInput.value = ''; $event.preventDefault()">
+            </div>
+          </div>
+          <div class="mt-1 text-xs text-gray-500">
+            Digite um beneficio e pressione Enter para adicionar
+          </div>
+          <div *ngIf="beneficios.length === 0 && vagaForm.touched" class="mt-1 text-xs text-red-500">
+            Adicione pelo menos um beneficio
+          </div>
+        </div>
+
+        <div class="w-full">
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            Diferenciais<span class="text-red-500 ml-0.5">*</span>
+          </label>
+          <div
+            class="min-h-[45px] p-2 border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 bg-white transition-colors">
+            <div class="flex flex-wrap gap-2 mb-2">
+              <div *ngFor="let diferencial of diferenciais"
+                class="flex items-center bg-blue-50 text-blue-700 text-xs font-medium px-3 py-1 rounded-full">
+                {{diferencial}}
+                <button type="button" (click)="removerDiferencial(diferencial)"
+                  class="ml-1 text-blue-700 hover:text-red-500 focus:outline-none">
+                  ✕
+                </button>
+              </div>
+            </div>
+            <div>
+              <input #diferencialInput placeholder="Adicionar requisito e pressionar Enter"
+                class="w-full border-none p-1 text-sm focus:outline-none"
+                (keydown.enter)="adicionarDiferencialManual(diferencialInput.value); beneficioInput.value = ''; $event.preventDefault()">
+            </div>
+          </div>
+          <div class="mt-1 text-xs text-gray-500">
+            Digite um diferencial e pressione Enter para adicionar
+          </div>
+          <div *ngIf="diferenciais.length === 0 && vagaForm.touched" class="mt-1 text-xs text-red-500">
+            Adicione pelo menos um diferencial
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div>
+            <label for="dataPublicacao" class="block text-sm font-medium text-gray-700 mb-1">
+              Data de publicação
+            </label>
+            <input id="dataPublicacao" type="date" formControlName="dataPublicacao"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm">
+          </div>
+
+          <div>
+            <label for="dataPrazoInscricao" class="block text-sm font-medium text-gray-700 mb-1">
+              Prazo da inscrição
+            </label>
+            <input id="dataPrazoInscricao" type="date" formControlName="dataPrazoInscricao"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm">
+          </div>
+
+          <div *ngIf="modoEdicao">
+            <label for="status" class="block text-sm font-medium text-gray-700 mb-1">
+              Status
+            </label>
+            <select id="status" formControlName="status"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm appearance-none bg-white bg-select-arrow bg-no-repeat bg-right-05">
+              <option *ngFor="let status of statusOptions" [value]="status">{{status}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-end gap-4 p-6 border-t border-gray-200 bg-gray-50 sticky bottom-0 left-0 right-0">
+      <button type="button"
+        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+        (click)="fechar()">
+        Cancelar
+      </button>
+      <button type="submit"
+        class="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        [disabled]="vagaForm.invalid || requisitos.length === 0">
+        {{ modoEdicao ? 'Atualizar' : 'Criar' }} vaga
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,68 @@
+<div class="min-h-screen p-4 md:p-6 bg-gradient-to-b from-purple-100 to-blue-50">
+  <div class="max-w-5xl mx-auto pt-8 pb-12">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-purple-700">Buscar Oportunidades</h1>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md p-4 mb-8 mx-auto max-w-2xl">
+      <div class="flex">
+        <input type="text" [(ngModel)]="termoBusca" placeholder="Qual cargo você busca?"
+          class="flex-1 border border-gray-200 rounded-l-lg p-2 outline-none" (keyup.enter)="buscarVagas()">
+        <button (click)="buscarVagas()"
+          class="bg-teal-500 hover:bg-teal-600 text-white rounded-r-lg px-4 py-2 flex items-center">
+          <mat-icon class="mr-1">search</mat-icon>
+          Buscar vagas
+        </button>
+      </div>
+    </div>
+
+    <div
+      class="bg-white rounded-lg border border-green-200 p-4 mb-8 mx-auto max-w-2xl flex flex-col sm:flex-row justify-between items-center">
+      <div class="mb-4 sm:mb-0 text-center sm:text-left">
+        <p class="text-sm font-medium">Seja o primeiro a saber das <span class="text-blue-500">melhores vagas</span> com
+          seu perfil</p>
+      </div>
+      <button (click)="receberVagasWhatsapp()"
+        class="bg-green-400 hover:bg-green-500 text-white rounded-md px-4 py-2 flex items-center">
+        <mat-icon class="mr-1">chat</mat-icon>
+        Receber vagas no whatsapp
+      </button>
+    </div>
+
+    <div *ngIf="buscaRealizada" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div *ngFor="let vaga of vagasEncontradas"
+        class="bg-white rounded-lg shadow hover:shadow-md transition-shadow p-4">
+        <div class="flex justify-between items-start mb-3">
+          <div>
+            <div class="flex items-center mb-1">
+              <div class="bg-blue-600 text-white w-8 h-8 rounded-md flex items-center justify-center mr-2">
+                <mat-icon>work</mat-icon>
+              </div>
+              <h3 class="font-medium">{{ vaga.titulo }}</h3>
+            </div>
+
+            <div class="flex flex-wrap gap-1 text-xs mt-2">
+              <span *ngFor="let tech of vaga.requisitos" class="bg-gray-100 text-gray-600 px-2 py-1 rounded">{{ tech
+                }}</span>
+              <span *ngIf="vaga.localidade" class="bg-gray-100 text-gray-600 px-2 py-1 rounded">{{ vaga.localidade
+                }}</span>
+            </div>
+          </div>
+
+          <button (click)="verDetalhes(vaga)" class="text-blue-500 hover:text-blue-700" matTooltip="Ver detalhes">
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+
+        <div class="flex justify-between items-center mt-4 text-xs">
+          <div>
+            <span *ngIf="vaga.modalidade == modalidadesEnum.REMOTO" class="text-purple-600 mr-2">Remoto</span>
+            <span *ngIf="vaga.modalidade == modalidadesEnum.HIBRIDO" class="text-purple-600 mr-2">Híbrido</span>
+            <span *ngIf="vaga.modalidade == modalidadesEnum.PRESENCIAL" class="text-gray-500">{{ vaga.faixaSalarial
+              }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

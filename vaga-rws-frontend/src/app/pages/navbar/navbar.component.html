@@ -1,0 +1,42 @@
+<div class="min-h-screen p-4 md:p-6">
+
+  <header class="bg-white bg-opacity-90 dark:bg-gray-800 dark:bg-opacity-90 rounded-lg shadow mb-6 p-4 flex flex-col md:flex-row justify-between items-start md:items-center">
+    <div class="flex flex-col md:flex-row md:items-center w-full md:w-auto mb-4 md:mb-0">
+      <div class="text-blue-500 font-bold text-2xl mr-0 md:mr-8 mb-4 md:mb-0">Vagas</div>
+      
+      <nav class="flex flex-wrap gap-2 md:space-x-4">
+        <a mat-button class="flex items-center" routerLinkActive="text-blue-500" (click)="open('dashboard')">
+          <mat-icon class="mr-1">home</mat-icon> Meu painel
+        </a>
+        <a mat-button class="flex items-center" routerLinkActive="text-blue-500" (click)="open('candidaturas')">
+          <mat-icon class="mr-1">description</mat-icon> Candidaturas
+        </a>
+        <a mat-button class="flex items-center" routerLinkActive="text-blue-500" [matMenuTriggerFor]="menu" [permissions]="hasPermissionAdmin()">
+          <mat-icon class="mr-1">person</mat-icon> Administrador
+        </a>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="open('usuarios')">Usuários</button>
+          <button mat-menu-item (click)="open('vagas')" >Vagas</button>
+        </mat-menu>
+      </nav>
+    </div>
+    
+    <div class="flex flex-col md:flex-row items-center w-full md:w-auto">
+      <button mat-raised-button color="primary" class="w-full md:w-auto md:mr-4 mb-4 md:mb-0" (click)="open('vagas/busca')">
+        <mat-icon>search</mat-icon> Buscar vagas
+      </button>
+      <div class="flex items-center bg-purple-600 text-white rounded-lg px-3 py-2 w-full md:w-auto justify-center md:justify-start" [matMenuTriggerFor]="menuUsuario">
+        <div class="mr-2 truncate" >robson.weenden...</div>
+        <mat-icon>arrow_drop_down</mat-icon>
+        <mat-menu #menuUsuario="matMenu">
+          <button mat-menu-item (click)="logout()" >sair</button>
+        </mat-menu>
+      </div>
+    </div>
+  </header>
+
+  <!-- Conteúdo principal -->
+  <div>
+    <router-outlet></router-outlet>
+  </div>
+</div>

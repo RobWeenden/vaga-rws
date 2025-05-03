@@ -1,0 +1,174 @@
+<div class="min-h-screen bg-gray-50">
+  <div class="p-6">
+    <div class="mb-4 flex items-center text-sm text-gray-600">
+      <a routerLink="/painel" class="hover:text-blue-500 flex items-center">
+        <mat-icon class="text-sm mr-1">home</mat-icon> Meu painel
+      </a>
+      <span class="mx-2">/</span>
+      <a routerLink="/vagas" class="hover:text-blue-500">Vagas</a>
+      <span class="mx-2">/</span>
+      <span class="text-gray-800">Detalhes da vaga</span>
+    </div>
+
+    <div *ngIf="carregando" class="flex flex-col items-center justify-center py-16">
+      <div class="w-16 h-16 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin mb-4"></div>
+      <p class="text-gray-600">Carregando informações da vaga...</p>
+    </div>
+
+    <div *ngIf="erro && !carregando" class="flex flex-col items-center justify-center py-16">
+      <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mb-4">
+        <mat-icon class="text-red-500 text-3xl">error_outline</mat-icon>
+      </div>
+      <p class="text-gray-600 mb-4">{{mensagemErro || 'Não foi possível carregar os detalhes da vaga.'}}</p>
+      <button (click)="voltar()" mat-stroked-button color="primary">
+        Voltar para lista de vagas
+      </button>
+    </div>
+
+    <div *ngIf="!carregando && !erro && vaga" class="mb-6">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
+        <button (click)="voltar()" mat-stroked-button class="flex items-center w-max">
+          <mat-icon class="mr-1">arrow_back</mat-icon> Voltar
+        </button>
+
+        <div class="flex space-x-3 mt-3 sm:mt-0">
+          <button mat-stroked-button color="primary" class="flex items-center" (click)="compartilhar()">
+            <mat-icon class="mr-1">share</mat-icon> Compartilhar
+          </button>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between">
+        <h1 class="text-2xl font-medium text-gray-800 mb-2 sm:mb-0">{{vaga.titulo}}</h1>
+
+        <div class="flex items-center">
+          <span class="px-3 py-1 text-sm rounded-full" [ngClass]="{
+                'bg-green-100 text-green-800': vaga.status === 'Ativa',
+                'bg-yellow-100 text-yellow-800': vaga.status === 'Pausada',
+                'bg-gray-100 text-gray-800': vaga.status === 'Encerrada'
+              }">
+            {{vaga.status}}
+          </span>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row sm:items-center text-gray-600 mt-2 mb-6">
+        <div class="flex items-center mr-4">
+          <mat-icon class="text-gray-400 mr-1">business</mat-icon>
+          <span>{{vaga.empresa}}</span>
+        </div>
+        <div class="flex items-center mr-4">
+          <mat-icon class="text-gray-400 mr-1">location_on</mat-icon>
+          <span>{{vaga.localidade}}</span>
+        </div>
+        <div class="flex items-center mr-4">
+          <mat-icon class="text-gray-400 mr-1">work</mat-icon>
+          <span>{{vaga.regime}}</span>
+        </div>
+        <div class="flex items-center">
+          <mat-icon class="text-gray-400 mr-1">home_work</mat-icon>
+          <span>{{vaga.modalidade}}</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div
+          class="bg-white rounded-lg shadow-sm p-6 flex flex-col items-center justify-center border-t-4 border-blue-500">
+          <div class="mb-4">
+            <div class="text-sm text-gray-600 mb-1">Prazo de inscrição</div>
+            <div class="text-xl font-semibold">{{vaga.dataPrazoInscricao| date: 'dd/MM/yyyy'}}</div>
+
+            <div *ngIf="vaga.dataPrazoInscricao && getDiasRestantes(vaga.dataPrazoInscricao) !== null"
+              class="text-sm mt-1">
+              <span [ngClass]="{
+                    'text-red-500': getDiasRestantes(vaga.dataPrazoInscricao)! < 3,
+                    'text-yellow-600': getDiasRestantes(vaga.dataPrazoInscricao)! >= 3 && getDiasRestantes(vaga.dataPrazoInscricao)! < 7,
+                    'text-green-600': getDiasRestantes(vaga.dataPrazoInscricao)! >= 7
+                  }">
+                {{getDiasRestantes(vaga.dataPrazoInscricao)}} dias restantes
+              </span>
+            </div>
+          </div>
+
+          <button *ngIf="vaga.status === 'Ativa'" (click)="candidatar()" mat-raised-button color="primary"
+            class="w-full" [disabled]="jaCandidatou">
+            <span *ngIf="!jaCandidatou">Candidatar-se</span>
+            <span *ngIf="jaCandidatou">Candidatura enviada</span>
+          </button>
+
+          <button *ngIf="vaga.status !== 'Ativa'" mat-raised-button color="primary" class="w-full" disabled>
+            Vaga {{vaga.status.toLowerCase()}}
+          </button>
+          <div class="text-sm text-gray-500 mt-4 text-center">
+            <a href="javascript:void(0)" (click)="cancelarCandidatura()" *ngIf="jaCandidatou">Cancelar Candidatura?</a>
+          </div>
+
+          <div class="text-sm text-gray-500 mt-4 text-center">
+            {{vaga.qtdCandidaturas}} pessoa{{vaga.qtdCandidaturas !== 1 ? 's' : ''}} já se candidataram
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h3 class="font-medium text-gray-800 mb-3 flex items-center">
+            <mat-icon class="text-gray-400 mr-2">payments</mat-icon>
+            Salário
+          </h3>
+          <p class="text-gray-600">{{vaga.faixaSalarial || 'A combinar'}}</p>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h3 class="font-medium text-gray-800 mb-3 flex items-center">
+            <mat-icon class="text-gray-400 mr-2">email</mat-icon>
+            Contato
+          </h3>
+          <p class="text-gray-600">{{vaga.emailContato || 'Não informado'}}</p>
+
+          <div class="text-xs text-gray-500 mt-3">
+            Publicado em {{vaga.dataPublicacao | date: 'dd/MM/yyyy' }}
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+        <section class="mb-8">
+          <h2 class="text-xl font-medium text-gray-800 mb-4">Descrição da vaga</h2>
+          <div class="text-gray-600 whitespace-pre-line">{{vaga.descricao}}</div>
+        </section>
+
+        <section class="mb-8">
+          <h2 class="text-xl font-medium text-gray-800 mb-4">Requisitos</h2>
+          <ul class="list-disc pl-5 space-y-2 text-gray-600">
+            <li *ngFor="let requisito of vaga.requisitos">{{requisito}}</li>
+          </ul>
+        </section>
+
+        <section *ngIf="vaga.beneficios && vaga.beneficios.length > 0" class="mb-8">
+          <h2 class="text-xl font-medium text-gray-800 mb-4">Benefícios</h2>
+          <ul class="list-disc pl-5 space-y-2 text-gray-600">
+            <li *ngFor="let beneficio of vaga.beneficios">{{beneficio}}</li>
+          </ul>
+        </section>
+
+        <section *ngIf="vaga.diferenciais && vaga.diferenciais.length > 0" class="mb-8">
+          <h2 class="text-xl font-medium text-gray-800 mb-4">Diferenciais</h2>
+          <ul class="list-disc pl-5 space-y-2 text-gray-600">
+            <li *ngFor="let diferencial of vaga.diferenciais">{{diferencial}}</li>
+          </ul>
+        </section>
+
+        <section *ngIf="vaga.sobreEmpresa" class="mb-4">
+          <h2 class="text-xl font-medium text-gray-800 mb-4">Sobre a empresa</h2>
+          <div class="text-gray-600">{{vaga.sobreEmpresa}}</div>
+        </section>
+      </div>
+
+      <div class="flex justify-center">
+        <button *ngIf="vaga.status === 'Ativa'" (click)="candidatar()" mat-raised-button color="primary"
+          class="px-6 py-2" [disabled]="jaCandidatou">
+          <span *ngIf="!jaCandidatou">Candidatar-se à vaga</span>
+          <span *ngIf="jaCandidatou">Candidatura enviada</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

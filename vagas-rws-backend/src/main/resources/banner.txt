@@ -1,0 +1,12 @@
+[38;5;208m
+██████╗ ██╗    ██╗███████╗
+██╔══██╗██║    ██║██╔════╝
+██████╔╝██║ █╗ ██║███████╗
+██╔══██╗██║███╗██║╚════██║
+██║  ██║╚███╔███╔╝███████║
+╚═╝  ╚═╝ ╚══╝╚══╝ ╚══════╝
+
+Application: ${vagarws.description}
+Version: ${vagarws.version}
+Powered by Spring Boot ${spring-boot.version}
+[0m

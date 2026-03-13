@@ -1,0 +1,30 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  create-release:
+    name: Criar Release
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Gerar Changelog
+        id: changelog
+        uses: metcalfc/changelog-generator@v4.3.1
+        with:
+          myToken: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Criar Release
+        uses: softprops/action-gh-release@v1
+        with:
+          body: ${{ steps.changelog.outputs.changelog }}
+          draft: false
+          prerelease: false

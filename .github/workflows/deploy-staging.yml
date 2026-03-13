@@ -1,0 +1,84 @@
+name: Deploy - Homologação
+
+on:
+  push:
+    branches: [ staging ]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    name: Build e Deploy - HML
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+      
+      - name: Configurar Java 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+      
+      - name: Build Backend
+        working-directory: ./vagas-rws-backend
+        run: |
+          echo "🔨 Building backend..."
+          mvn clean package -DskipTests
+          echo "✅ Backend build concluído!"
+      
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: vaga-rws-frontend/package-lock.json
+      
+      - name: Build Frontend
+        working-directory: ./vaga-rws-frontend
+        run: |
+          echo "🔨 Building frontend..."
+          npm ci
+          npm run build
+          echo "✅ Frontend build concluído!"
+      
+      - name: Build Docker Images
+        run: |
+          echo "🐳 Building Docker images..."
+          docker-compose build
+          echo "✅ Docker images criadas!"
+          docker images | grep vaga-rws
+      
+      - name: Simular Deploy em Homologação
+        run: |
+          echo "🚀 Iniciando deploy em HOMOLOGAÇÃO..."
+          echo "📦 Versão: ${{ github.sha }}"
+          echo "🔗 Branch: ${{ github.ref_name }}"
+          echo "👤 Autor: ${{ github.actor }}"
+          echo ""
+          echo "✅ Deploy em homologação concluído com sucesso!"
+          echo "🌐 Backend disponível em: http://homologacao.vagarws.com:8080"
+          echo "🌐 Frontend disponível em: http://homologacao.vagarws.com:8081"
+          echo ""
+          echo "📊 Próximos passos:"
+          echo "  1. QA pode testar as mudanças"
+          echo "  2. Após aprovação, fazer merge para main"
+          echo "  3. Criar tag para deploy em produção"
+      
+      - name: Upload Backend Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-staging-${{ github.sha }}
+          path: vagas-rws-backend/target/*.jar
+          retention-days: 7
+      
+      - name: Upload Frontend Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-staging-${{ github.sha }}
+          path: vaga-rws-frontend/dist
+          retention-days: 7

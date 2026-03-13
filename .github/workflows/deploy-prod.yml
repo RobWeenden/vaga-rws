@@ -4,7 +4,6 @@ name: Pipeline Produção
 on:
   push:
     branches: [ main ]
-  push:
     tags:
       - 'v*'
   workflow_dispatch:
@@ -341,7 +340,7 @@ jobs:
           echo "🌐 Frontend: https://vagarws.com"
       
       - name: Criar Tag Git (se não for push de tag)
-        if: github.event_name != 'push' || !startsWith(github.ref, 'refs/tags/')
+        if: ${{ github.event_name != 'push' || !startsWith(github.ref, 'refs/tags/') }}
         run: |
           echo "🏷️ Criando tag Git: ${{ env.VERSION }}"
           git config user.name "GitHub Actions"

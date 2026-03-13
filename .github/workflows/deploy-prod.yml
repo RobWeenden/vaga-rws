@@ -179,9 +179,9 @@ jobs:
       - name: Simular Upload de Artefatos
         run: |
           echo "📦 SIMULAÇÃO: Upload de artefatos de produção..."
-          echo "   ✅ backend-prod-${{ github.ref_name }}.jar (45.2 MB)"
-          echo "   ✅ frontend-prod-${{env.VERSION }}.jar (45.2 MB)"
-          echo "   ✅ frontend-prod-${{ env.VERSION
+          echo "   ✅ backend-prod-${{ env.VERSION }}.jar (45.2 MB)"
+          echo "   ✅ frontend-prod-${{ env.VERSION }}.zip (1.8 MB)"
+          echo "   Retention: 90 dias"
           echo "✅ Artefatos disponíveis para download!"
       
       - name: Gerar Resumo do Build

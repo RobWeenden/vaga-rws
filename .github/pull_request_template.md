@@ -3,10 +3,14 @@
 
 
 
-## �️ Versão (para Produção)
-<!-- Se este PR vai para produção, informe a versão no formato v1.2.3 -->
-<!-- Deixe em branco se for apenas para staging/homologação -->
-**Versão**: 
+## 🏷️ Versão para Deploy em Produção
+<!-- ⚠️ IMPORTANTE: Se este PR vai para PRODUÇÃO (staging → main), informe a versão -->
+<!-- Formato obrigatório: v1.2.3 (ex: v1.0.0, v2.1.5) -->
+<!-- Para PRs de homologação (feature → staging), deixe em branco -->
+
+**Versão**: v
+
+---
 
 ## �🎯 Tipo de Mudança
 <!-- Marque as opções relevantes -->

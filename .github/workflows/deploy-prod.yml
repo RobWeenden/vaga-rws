@@ -255,13 +255,38 @@ jobs:
           echo "🌐 Backend: https://vagarws.com/api"
           echo "🌐 Frontend: https://vagarws.com"
       
-      - name: Criar Release no GitHub
-        run: |
-          echo "📋 SIMULAÇÃO: Criando release no GitHub..."
-          echo "   Release: ${{ env.VERSION }}"
-          echo "   Artefatos anexados: backend JAR"
-          echo "   Release notes: Geradas automaticamente"
-          echo "✅ Release criada!"
+      - name: Criar Release no GitHub com Notes Automáticos
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.VERSION }}
+          name: Release ${{ env.VERSION }}
+          generate_release_notes: true  # GitHub gera automaticamente dos PRs!
+          draft: false
+          prerelease: false
+          body: |
+            ## 🚀 Deploy em Produção - ${{ env.VERSION }}
+            
+            **Data**: $(date '+%Y-%m-%d %H:%M:%S')
+            **Responsável**: ${{ github.actor }}
+            
+            ### ✅ Pipeline Executado
+            - ✅ Testes Backend + Frontend
+            - ✅ Análise de Qualidade (SonarQube)
+            - ✅ Build de Produção
+            - ✅ Backup do Banco de Dados
+            - ✅ Deploy em Produção
+            
+            ### 🔗 Ambientes
+            - **Produção**: https://vagarws.com
+            - **API**: https://vagarws.com/api
+            
+            ---
+            
+            ### 📋 Changelog Automático
+            
+            _(Release notes gerados automaticamente dos Pull Requests mergeados)_
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Gerar Resumo do Deploy
         run: |
@@ -273,10 +298,13 @@ jobs:
           echo "- ✅ Build para Produção" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Backup do Banco" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ **Deploy em Produção**" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Release Criada" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ **Release ${{ env.VERSION }} Criada com Release Notes Automáticos**" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 🏷️ Versão Implantada" >> $GITHUB_STEP_SUMMARY
           echo "- **${{ env.VERSION }}**" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📋 Release Notes" >> $GITHUB_STEP_SUMMARY
+          echo "- 🔗 [Ver Release Completa](https://github.com/${{ github.repository }}/releases/tag/${{ env.VERSION }})" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 🔗 Ambientes Disponíveis" >> $GITHUB_STEP_SUMMARY
           echo "- **Backend**: https://vagarws.com/api" >> $GITHUB_STEP_SUMMARY

@@ -245,3 +245,49 @@ jobs:
           echo "### 🔗 Ambientes Disponíveis" >> $GITHUB_STEP_SUMMARY
           echo "- **Backend**: http://homologacao.vagarws.com:8080" >> $GITHUB_STEP_SUMMARY
           echo "- **Frontend**: http://homologacao.vagarws.com:8081" >> $GITHUB_STEP_SUMMARY
+  
+  # Job 6: Preview de Release Notes (o que foi deployado)
+  release-notes-preview:
+    name: 📋 Preview - Release Notes
+    runs-on: ubuntu-latest
+    needs: [deploy]
+    if: github.event.inputs.action == 'build+deploy' || github.event_name == 'push'
+    
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Busca todo o histórico para comparação
+      
+      - name: Gerar Preview de Release Notes
+        run: |
+          echo "📋 Gerando preview do que foi deployado em HOMOLOGAÇÃO..."
+          echo ""
+          echo "## 🚀 Mudanças Nesta Entrega" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Buscar commits desde o último deploy
+          echo "### 📦 Commits Incluídos" >> $GITHUB_STEP_SUMMARY
+          git log --oneline -10 --pretty=format:"- %s (%an)" >> $GITHUB_STEP_SUMMARY || echo "- Commits recentes" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          echo "### 👤 Informações do Deploy" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch**: \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit**: \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Autor do Deploy**: ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Data**: $(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          echo "### 📝 Próximos Passos" >> $GITHUB_STEP_SUMMARY
+          echo "1. ✅ **QA**: Testar funcionalidades em homologação" >> $GITHUB_STEP_SUMMARY
+          echo "2. ✅ **Validação**: Revisar relatórios SonarQube" >> $GITHUB_STEP_SUMMARY
+          echo "3. ✅ **Aprovação**: Solicitar aprovação do cliente" >> $GITHUB_STEP_SUMMARY
+          echo "4. 🚀 **Produção**: Após aprovado, fazer merge para \`main\` e criar tag" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "💡 **Dica**: Quando pronto para produção, crie uma tag \`v1.x.x\` para gerar o release notes completo!" >> $GITHUB_STEP_SUMMARY
+          
+          echo "✅ Preview de release notes gerado!"

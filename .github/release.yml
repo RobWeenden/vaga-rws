@@ -1,0 +1,77 @@
+# Configuração de Release Notes Automático
+# Documentação: https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes
+
+changelog:
+  exclude:
+    labels:
+      - ignore-for-release
+      - duplicate
+      - question
+      - invalid
+      - wontfix
+    authors:
+      - dependabot
+  
+  categories:
+    - title: 🚀 Novas Funcionalidades
+      labels:
+        - feature
+        - enhancement
+        - new-feature
+    
+    - title: 🐛 Correções de Bugs
+      labels:
+        - bug
+        - fix
+        - bugfix
+        - hotfix
+    
+    - title: 🔒 Segurança
+      labels:
+        - security
+        - vulnerability
+    
+    - title: 🗄️ Banco de Dados (Flyway/Migrations)
+      labels:
+        - database
+        - migration
+        - flyway
+        - liquibase
+    
+    - title: ⚡ Performance
+      labels:
+        - performance
+        - optimization
+    
+    - title: 📦 Dependências
+      labels:
+        - dependencies
+        - deps
+    
+    - title: 📚 Documentação
+      labels:
+        - documentation
+        - docs
+    
+    - title: 🔧 Refatoração/Manutenção
+      labels:
+        - refactor
+        - chore
+        - maintenance
+    
+    - title: 🧪 Testes
+      labels:
+        - test
+        - tests
+        - testing
+    
+    - title: 🎨 Interface/UI
+      labels:
+        - ui
+        - ux
+        - frontend
+        - design
+    
+    - title: 🔨 Outras Mudanças
+      labels:
+        - "*"

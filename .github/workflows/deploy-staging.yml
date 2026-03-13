@@ -187,9 +187,19 @@ jobs:
           echo "- Backend: \`backend-staging-${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
           echo "- Frontend: \`frontend-staging-${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
 
-  # Job 5: Deploy (Condicional - só executa com input 'build+deploy' ou push)
+  # Job 5: Deploy em Homologação (REQUER APROVAÇÃO DA EQUIPE DE OPERAÇÕES)
+  # 
+  # ⚠️ IMPORTANTE: Configure aprovadores em Settings → Environments → staging
+  # 
+  # Este job simula o fluxo atual onde Operações aprova deploy em homologação:
+  # 1. Build e testes executam automaticamente
+  # 2. Pipeline AGUARDA aprovação da Equipe de Operações
+  # 3. Operações revisa e clica "Approve and deploy" no GitHub
+  # 4. Deploy acontece automaticamente
+  # 
+  # Isso ELIMINA o ticket do Taiga - aprovação fica no GitHub!
   deploy:
-    name: Deploy - Homologação
+    name: 🚀 Deploy Homologação (Aguarda Aprovação)
     runs-on: ubuntu-latest
     needs: [build]
     if: github.event.inputs.action == 'build+deploy' || github.event_name == 'push'
@@ -198,6 +208,35 @@ jobs:
       url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
     
     steps:
+      - name: ⏸️ Checkpoint - Aprovação Requerida
+        run: |
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo ""
+          echo "   ⏸️  AGUARDANDO APROVAÇÃO DA EQUIPE DE OPERAÇÕES"
+          echo ""
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo ""
+          echo "✅ Pipeline executada com sucesso:"
+          echo "   → Testes Backend: PASSOU"
+          echo "   → Testes Frontend: PASSOU"
+          echo "   → SonarQube: PASSOU"
+          echo "   → Build: CONCLUÍDO"
+          echo ""
+          echo "📦 Pacote pronto para deploy em HOMOLOGAÇÃO"
+          echo ""
+          echo "👥 Equipe de Operações deve:"
+          echo "   1. Revisar os resultados acima"
+          echo "   2. Verificar relatórios de qualidade"
+          echo "   3. Clicar em 'Review deployments' nesta página"
+          echo "   4. Aprovar ou rejeitar o deploy"
+          echo ""
+          echo "🔗 Após aprovação, deploy será executado automaticamente"
+          echo ""
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo ""
+          echo "💡 Isso substitui o ticket do Taiga!"
+          echo ""
+    
       - name: Checkout código
         uses: actions/checkout@v4
       

@@ -3,7 +3,12 @@
 
 
 
-## 🎯 Tipo de Mudança
+## �️ Versão (para Produção)
+<!-- Se este PR vai para produção, informe a versão no formato v1.2.3 -->
+<!-- Deixe em branco se for apenas para staging/homologação -->
+**Versão**: 
+
+## �🎯 Tipo de Mudança
 <!-- Marque as opções relevantes -->
 - [ ] 🐛 Correção de bug (bugfix)
 - [ ] 🚀 Nova funcionalidade (feature)
